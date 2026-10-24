@@ -1,0 +1,52 @@
+{
+  "projects": [
+    {
+      "name": "Atlas Client Portal",
+      "owner": "Jordan Lee",
+      "status": "On track",
+      "recentActivity": "Customer review completed; handoff notes are ready.",
+      "priority": "High",
+      "summary": "A simpler, more useful home for customer updates and account resources."
+    },
+    {
+      "name": "Northstar Analytics",
+      "owner": "Sam Rivera",
+      "status": "At risk",
+      "recentActivity": "Data refresh is being investigated ahead of the next review.",
+      "priority": "High",
+      "summary": "Bring key product signals together so teams can make confident decisions."
+    },
+    {
+      "name": "Workspace Refresh",
+      "owner": "Avery Chen",
+      "status": "On track",
+      "recentActivity": "The updated navigation is ready for contributor feedback.",
+      "priority": "Medium",
+      "summary": "Make everyday collaboration feel clearer, faster, and more welcoming."
+    },
+    {
+      "name": "API Foundations",
+      "owner": "Morgan Patel",
+      "status": "Needs attention",
+      "recentActivity": "A dependency review is scheduled with the platform team.",
+      "priority": "High",
+      "summary": "Strengthen the shared services that power the team's next generation of tools."
+    },
+    {
+      "name": "Launchpad Onboarding",
+      "owner": "Taylor Kim",
+      "status": "On track",
+      "recentActivity": "New starter guide is in review with the support crew.",
+      "priority": "Low",
+      "summary": "Help new contributors find their footing and make their first impact sooner."
+    },
+    {
+      "name": "Insights Digest",
+      "owner": "Casey Morgan",
+      "status": "Complete",
+      "recentActivity": "First edition shipped to the pilot group this week.",
+      "priority": "Medium",
+      "summary": "Turn the team's latest progress into a short, useful weekly read."
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#projects">Skip to projects</a>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Project Pulse home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Project<span class="brand-accent">Pulse</span></span>
+      </a>
+      <span class="header-label">TEAM OVERVIEW</span>
+    </header>
+
+    <main class="dashboard">
+      <section class="dashboard-intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">MONA'S TEAM · PROJECTS</p>
+          <h1 id="page-title">Project Pulse</h1>
+          <p class="intro-copy">A clear view of what's moving, who's making it happen, and where to focus next.</p>
+        </div>
+        <div class="updated-label"><span class="live-dot" aria-hidden="true"></span> Team workspace</div>
+      </section>
+
+      <section class="overview" aria-label="Project overview">
+        <article class="overview-card">
+          <span class="overview-icon icon-violet" aria-hidden="true">◈</span>
+          <div><p class="overview-label">Active projects</p><p class="overview-value" id="active-count">—</p></div>
+        </article>
+        <article class="overview-card">
+          <span class="overview-icon icon-green" aria-hidden="true">✓</span>
+          <div><p class="overview-label">On track</p><p class="overview-value" id="on-track-count">—</p></div>
+        </article>
+        <article class="overview-card">
+          <span class="overview-icon icon-amber" aria-hidden="true">!</span>
+          <div><p class="overview-label">Needs attention</p><p class="overview-value" id="attention-count">—</p></div>
+        </article>
+      </section>
+
+      <section class="projects-section" id="projects" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE BIG PICTURE</p>
+            <h2 id="projects-heading">Your projects</h2>
+          </div>
+          <span class="section-note" id="project-total" aria-live="polite"></span>
+        </div>
+        <p class="load-message" id="load-message" role="status">Loading projects…</p>
+        <div class="project-grid" id="project-list"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Project Pulse</span>
+      <span>One team, moving forward.</span>
+    </footer>
+
+    <script>
+      const projectList = document.querySelector("#project-list");
+      const loadMessage = document.querySelector("#load-message");
+
+      function makeProjectCard(project) {
+        const card = document.createElement("article");
+        card.className = "project-card";
+
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "card-header";
+
+        const title = document.createElement("h3");
+        title.className = "project-name";
+        title.textContent = project.name;
+
+        const status = document.createElement("span");
+        status.className = "status-badge";
+        status.dataset.status = project.status;
+        status.textContent = project.status;
+        cardHeader.append(title, status);
+
+        const summary = document.createElement("p");
+        summary.className = "project-summary";
+        summary.textContent = project.summary;
+
+        const activity = document.createElement("div");
+        activity.className = "activity-block";
+        const activityLabel = document.createElement("span");
+        activityLabel.className = "detail-label";
+        activityLabel.textContent = "RECENT ACTIVITY";
+        const activityText = document.createElement("p");
+        activityText.className = "activity-text";
+        activityText.textContent = project.recentActivity;
+        activity.append(activityLabel, activityText);
+
+        const cardFooter = document.createElement("div");
+        cardFooter.className = "card-footer";
+        const owner = document.createElement("div");
+        owner.className = "owner";
+        const initials = document.createElement("span");
+        initials.className = "owner-avatar";
+        initials.setAttribute("aria-hidden", "true");
+        initials.textContent = project.owner
+          .split(/\s+/)
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        const ownerName = document.createElement("span");
+        ownerName.className = "owner-name";
+        ownerName.textContent = project.owner;
+        owner.append(initials, ownerName);
+
+        const priority = document.createElement("span");
+        priority.className = "priority-badge";
+        priority.dataset.priority = project.priority;
+        const priorityDot = document.createElement("span");
+        priorityDot.className = "priority-dot";
+        priorityDot.setAttribute("aria-hidden", "true");
+        priority.append(priorityDot, document.createTextNode(`${project.priority} priority`));
+        cardFooter.append(owner, priority);
+
+        card.append(cardHeader, summary, activity, cardFooter);
+        return card;
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+          if (!response.ok) {
+            throw new Error(`Project data request failed (${response.status})`);
+          }
+          const data = await response.json();
+          if (!Array.isArray(data.projects)) {
+            throw new Error("Project data must contain a projects array");
+          }
+
+          projectList.replaceChildren(...data.projects.map(makeProjectCard));
+          document.querySelector("#active-count").textContent =
+            data.projects.filter((project) => project.status !== "Complete").length;
+          document.querySelector("#on-track-count").textContent =
+            data.projects.filter((project) => project.status === "On track").length;
+          document.querySelector("#attention-count").textContent =
+            data.projects.filter((project) => project.status === "Needs attention").length;
+          document.querySelector("#project-total").textContent =
+            `${data.projects.length} projects`;
+          loadMessage.hidden = true;
+        } catch (error) {
+          loadMessage.textContent = `Projects couldn't be loaded. ${error.message}`;
+          loadMessage.classList.add("load-error");
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>
